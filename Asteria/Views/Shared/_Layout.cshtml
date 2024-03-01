@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Asteria</title>
+    <meta name="charset" content="UTF-8">
+    <meta name="author" content="Barbu Eduard(RK13)">
+    <meta name="description" content="The front page of the website. Built with a lot of sweat and tears, this is the very first page i started making">
+    <meta name="keywords" content="art,friends,gallery">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Asteria.styles.css" asp-append-version="true" />
+    <link rel="icon" href="./someimages/asteria-logo-bnw.png">
+</head>
+<body>
+	<header>
+		<div class="nvbr">
+			<img class="logo" src="./asteria-logo.png" alt="Logo">
+			<nav id="navigation">
+				<ul>
+					<li>
+						<a class="active" href="./index.html">Home</a>
+					</li>
+					<li>
+						<a href="./what-is-asteria.html">What is This Place?</a>
+					</li>
+					<li class="hover">
+						<a>Art</a>
+						<ul class="dropdown">
+							<li>
+								<a class="active" href="./art.html#recent"> Recent</a>
+							</li>
+							<li>
+								<a href="./art.html#favourites"> Favourites</a>
+							</li>
+							<li>
+								<a href="./art.html#old"> Ye Olde Days </a>
+							</li>
+							<li>
+								<a href="./art.html#dev"> In Development</a>
+							</li>
+						</ul>
+					</li>
+					<li class="hover">
+						<a>Our Pictures</a>
+						<ul class="dropdown">
+							<li>
+								<a class="active" href="./our-pictures.html#gallery1"> 1up!</a>
+							</li>
+							<li>
+								<a href="./our-pictures.html#gallery2"> Old Friends</a>
+							</li>
+							<li>
+								<a href="./our-pictures.html#gallery3"> Funny </a>
+							</li>
+							<li>
+								<a href="./art.html#gallery4"> With love </a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+			<div id="character"></div>
+		</div>
+		<section id="goexplore">
+			<h2>A place for art,<br>made for my friends!</h2>
+		</section>
+	</header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+		<div class="socialmedia">
+			<a href="#l1" class="ig"> Instagram </a>
+			<a href="#l1" class="fb"> Facebook </a>
+			<a href="#l1" class="twt"> Twitter </a>
+		</div>
+		<div class="copyright">
+			<p class="tiny"> Copyright 2023-2023 Student, Universitatea Bucuresti, Facultatea de Matematica si Informatica</p>
+			<p class="tiny"> Toate Drepturile Rezervate </p>
+			<p class="tiny"> Termeni si Conditii</p>
+			<p class="tiny"> <a href="./resurse.html"> Resurse</a></p>
+		</div>
+        <div class="container">
+            &copy; 2024 - Asteria - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
