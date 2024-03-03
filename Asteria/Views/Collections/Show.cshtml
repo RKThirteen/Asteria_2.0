@@ -1,0 +1,68 @@
+﻿@model Asteria.Models.Collection
+@{
+    ViewBag.Title = Model.CollectionName;
+}
+
+
+<h2 class="text-center text-white lead" style="font-size:30px">@ViewBag.Title</h2>
+
+<br />
+
+@if (ViewBag.EsteAdmin)
+{
+    <i class="bi bi-person text-white"> Creat de: @Model.User.UserName</i>
+
+}
+
+<p class="text-white">@Model.CollectionName</p>
+
+<p class="text-white">@Model.Description</p>
+
+
+<form method="post" action="/Categories/Delete/@Model.Id">
+
+    <button class="btn btn-danger" type="submit">Sterge categoria</button>
+
+</form>
+<br />
+<a class="btn alert-success" href="/Categories/Index/">Afisare lista categorii</a>
+
+<h3 class="text-white"> Postari salvate in aceasta categorie</h3>
+
+@if (Model.PostCollections.Count > 0)
+{
+    @foreach (var postcol in Model.PostCollections)
+    {
+        <div class="col-12">
+            <div class="card" style="width: 100%;">
+
+                <a class="btn btnn-success" href="/Bookmarks/Show/@postcol.PostId">
+                <div class="card-body">
+
+                    @Html.Partial("PostInfo", postcol.Post)
+
+                    <form method="post" asp-controller="Collections" asp-action="RemoveFromCollection">
+                            
+                        <input type="hidden" name="PostId" value="@postcol.PostId" />
+                            <input type="hidden" name="CollectionId" value="@postcol.CollectionId" />
+
+                        <button class="btn btn-danger" type="submit">Delete post from category</button>
+                    
+                    </form>
+
+                </div>
+                </a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card" style="width: 100%;">
+        <p class="text-white">No posts saved yet!</p>
+        <a class="bth btn-success" href="/Posts/Index">Search for posts</a>
+    </div>
+}
+<br />
+<hr />
+<br />

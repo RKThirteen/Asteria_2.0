@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Your Categories";
+}
+<br />
+<h2 class="text-center text-white lead" style="font-size:30px">@ViewBag.Title</h2>
+<br />
+
+@if (TempData.ContainsKey("message"))
+{
+    <h1 class=@ViewBag.messageType>@ViewBag.message</h1>
+}
+
+<br />
+
+<div class="align-items-center justify-content-left d-flex">
+    <a class="btn btn-success" href="/Collections/New">Create a collection</a>
+</div>
+
+<br />
+
+<div class="text-white">
+    @foreach (var category in ViewBag.Collections)
+    {
+        @Html.Label("CollectionName", "Collection Name", new{@class="lead"})
+        <p class="text-white">@category.CollectionName</p>
+        @if (category.Description != null)
+        {
+            @Html.Label("Description", "Description",new{@class="lead"})
+            <p class="text-white">@category.Description</p>
+        }
+        <a class="btn alert-success" href="/Collections/Show/@category.Id">See Posts</a>
+        <a class="btn alert-success" href="/Collections/Edit/@category.Id">Edit Collection</a>
+        <br />
+        <hr />
+        <br />
+    }
+</div>

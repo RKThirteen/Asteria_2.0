@@ -27,7 +27,7 @@ namespace Asteria.Models
         public IEnumerable<SelectListItem>? Categ { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
 
-       // public virtual ICollection<PostCollection>? PostCollections { get; set; }
+        public virtual ICollection<PostCollection>? PostCollections { get; set; }
         public string? UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }
     }

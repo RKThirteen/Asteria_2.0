@@ -18,6 +18,16 @@ namespace Asteria.Controllers
             return View();
         }
 
+        public IActionResult Info()
+        {
+            return View();
+        }
+
+        public IActionResult Resources()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -1,0 +1,172 @@
+﻿@model Asteria.Models.Post
+
+
+@{
+    ViewBag.Title = Model.Title;
+}
+<br />
+
+@if (ViewBag.message != null)
+{
+    <h2 class=@ViewBag.messageType>@ViewBag.message</h2>
+}
+
+<div class="d-flex justify-content-center">
+
+    <a class="btn btn-edit-outline btn-outline-success" asp-area="" asp-controller="Posts" asp-action="Index">Back to gallery</a>
+    @if (ViewBag.AfisareButoane || ViewBag.EsteAdmin)
+    {
+        <a class="btn btn-edit-outline btn-outline-success" href="/Posts/New">Add Post</a>
+    }
+
+</div>
+
+<br />
+
+<br />
+
+
+<div class = "box_total">
+    <div class="box_total_6 d-flex justify-content-center">
+                <div>@Html.Raw(Model.Content)</div>
+    </div>
+    <div class="box_total_4">
+            <div class="card">
+
+                <div class="card-body text-white">
+
+                    <h3 class="card-title alert-success py-3 px-3 rounded-2 d-flex justify-content-center maro">@Model.Title</h3>
+
+                    <div class="card-text">@Model.Description</div>
+
+                    <div><i class="bi bi-person"></i><a class="nav-link" href="/Users/Show/@Model.UserId"> @Model.User.Nickname </a> </div>
+
+                    <div class="alert-success maro">@Model.Date</div>
+
+                    <div class="likes d-flex justify-content-center">
+                        <a class="a-tw" href="@Url.Action("LikeUD", " ", new { id = Model.Id, userid = ViewBag.UserCurent})">
+                            <div>&#9829</div>
+                        </a>
+                        <div>@Model.Likes</div>
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <div class="d-flex flex-row justify-content-between">
+                    @if (ViewBag.AfisareButoane == true && Model.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin)
+                    {
+
+                        <a class="btn btn-success" href="/Posts/Edit/@Model.Id">Editeaza postare</a>
+
+                        <form method="post" action="/Posts/Delete/@Model.Id">
+
+                            <button class="btn btn-danger" type="submit">Sterge postare</button>
+
+                        </form>
+                    }
+
+                    <form method="post" asp-controller="Posts" asp-action="AddCollection">
+                        <input type="hidden" name="PostId" value="@Model.Id" />
+                        <div class="d-flex flex-row justify-content-center p-3 border-1 border-top">
+                            <div>
+                                <select name="CollectionId" class="form-control">
+                                    <option selected>Add this post in a collection</option>
+                                    @foreach (var collection in ViewBag.collections)
+                                    {
+                                        <option value="@collection.Id">@collection.CollectionName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div>
+                                <input type="submit" class="btn btn-success alert-success" value="+" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <br />
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-md-2"></div>
+
+                <div class="col-md-8">
+
+                    <div class="card text-white">
+
+                        <form method="post" action="/Posts/Show/@Model.Id">
+
+                            <div class="card-body">
+
+                                <input type="hidden" name="PostId" value="@Model.Id" />
+
+                                <label>Continut comentariu</label>
+                                <br />
+
+                                <textarea class="form-control" name="Content"></textarea>
+                                <br />
+
+                                <button class="btn btn-success " type="submit">Add comment</button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-2"></div>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        @foreach (var comm in Model.Comments)
+        {
+
+            <div class="d-flex justify-content-around">
+                <div class="containerr border-white">
+                    <div class="row">
+                        <div class="col-md-6 d-flex text-white">
+                            <small>@comm.User.UserName</small>
+                        </div>
+                        <div class="col-md-3 d-flex justify-content-between">
+                            @if (ViewBag.AfisareButoane == true && @comm.UserId == ViewBag.UserCurent || ViewBag.EsteAdmin)
+                            {
+
+                                <div>
+
+                                    <a class="btn btn-outline-primary" href="/Comments/Edit/@comm.Id"><i class="bi bi-pencil-square"></i>Edit</a>
+
+                                </div>
+                                <br />
+                                <div>
+
+
+                                    <form method="post" action="/Comments/Delete/@comm.Id">
+
+                                        <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i>Delete</button>
+
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="comentariu">
+                        <p>@comm.Content</p>
+                    </div>
+                    <div class="date-scris text-white">@comm.Date</div>
+                </div>
+
+            </div>
+            <br />
+        }
+    </div>
+</div>

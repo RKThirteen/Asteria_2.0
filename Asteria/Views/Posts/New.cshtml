@@ -1,0 +1,54 @@
+﻿@model Asteria.Models.Post
+
+@{
+    ViewData["Title"] = "Create a post";
+}
+
+<h2 class="text-center text-white lead" style="font-size:30px">Creeaza o postare</h2>
+<br />
+<div class="text-white">
+<form method="post" action="/Bookmarks/New">
+   @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+   <div class="container">
+   <div class="row">
+            <div class="col-6">
+                <div class="mb-3">
+                    @Html.Label("Content","Post Content")
+                    <br />
+                        @Html.TextArea("Content", null, new { @class = "summernote", style="background-color: whitesmoke;"})
+                    <br />
+                    @Html.ValidationMessageFor(m => m.Content, null, new { @class = "text-danger" })
+                    <br />
+                </div>
+            </div>
+    <div class="col-md-6 d-flex flex-column">
+    
+
+        @Html.Label("Title","Post Title")
+        <br />
+        @Html.TextBox("Title","",new{placeholder="Add a title", @class="form-control"})
+        <br />
+        @Html.ValidationMessageFor(m => m.Title, null, new { @class = "text-danger" })
+        <br />
+    
+
+        @Html.Label("Description","Post Description")
+        <br />
+        @Html.TextBox("Description",null,new {placeholder="Add a description", @class="form-control"})
+        <br />@Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })<br />
+
+        <label>Selectati categoria</label>
+        @Html.DropDownListFor(m => m.CollectionId, new SelectList(Model.Categ, "Value", "Text"),
+        "Add in one of your collections(optional)", new { @class = "form-control" })
+    
+    <br/>
+            <button class="btn btn-success" type="submit">Create Post</button>
+     </div>
+
+    
+    </div>
+    </div>
+ 
+</form>
+</div>
+

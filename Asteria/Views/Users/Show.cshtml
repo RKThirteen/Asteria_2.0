@@ -1,0 +1,119 @@
+﻿@model Asteria.Models.ApplicationUser
+
+@{
+    ViewBag.Title = @Model.Nickname;
+}
+@{
+    List<Post> userposts = ViewBag.UserPosts;
+}
+@if (TempData.ContainsKey("message"))
+{
+    <h2 class=@TempData["messageType"]>@TempData["message"]</h2>
+}
+@if ((string)Model.Id == ViewBag.UserCurent)
+{
+    <h2 class="text-white"> Your profile! </h2>
+}
+else
+{
+    <h2 class="text-white"> Profilul of @Model.Nickname </h2>
+}
+<br />
+<div class="card mt-3" style="height:100%; width: 100%;">
+
+    <div class="card-body d-flex justify-content-between flex-column text-white">
+        <div>
+            <p style="20px"><i class="bi bi-person"> </i> Nickname: @Model.Nickname</p>
+            <p class="text-white"> Profile Picture:</p>
+            @if (Model.ProfilePic != null)
+            {
+                <img style="width:65px;height:65px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(@Model.ProfilePic))">
+            }
+            else
+            {
+                <p class="text-white">No profile picture</p>
+            }
+
+
+            <p><i class="bi bi-envelope"></i> Email: @Model.Email</p>
+
+            @if (ViewBag.Roles != null && ViewBag.Roles.Count > 0)
+            {
+                <p><i class="bi bi-person"> </i> Roles:</p>
+                @foreach (var role in ViewBag.Roles)
+                {
+                    <span class="rounded-pill bg-dark mr-2 px-4 py-2 text-white">@role</span>
+                }
+            }
+
+
+
+        </div>
+
+        <div class="d-flex flex-row justify-content-between p-3">
+            @if (ViewBag.EsteAdmin == true || ViewBag.UserCurent == Model.Id && ViewBag.AfisareButoane == true)
+            {
+                <a class="btn btn-success" href="/Users/Edit/@Model.Id">Editeaza profilul</a>
+            }
+            @if ((string)Model.Id != ViewBag.UserCurent && ViewBag.EsteAdmin == true)
+            {
+
+
+                @using (Html.BeginForm(actionName: "Delete", controllerName: "Users", method: FormMethod.Post, routeValues: new { id = @Model.Id }))
+                {
+
+                    <button class="btn btn-danger" type="submit">Sterge utilizator</button>
+
+                }
+            }
+
+
+        </div>
+    </div>
+</div>
+<div class="" d-flex align-items-center"">
+    <h3 class="text-white"> Postari salvate </h3>
+
+    @if (userposts.Count > 0)
+    {
+        @foreach (var bm in userposts)
+        {
+            <a class="btn btnn-success m-2" href="/Bookmarks/Show/@bm.Id">
+                <div class="col-12">
+                    <div class="card" style="width: 100%;">
+
+                        <div class="card-body m-2">
+
+                            @Html.Partial("BookmarkInfo", @bm)
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+
+    }
+    else
+    {
+        <div class="card-body d-flex justify-content-between">
+            @if (ViewBag.UserCurent == Model.Id)
+            {
+                <p class="text-white">Momentan nu ai postari salvate!</p>
+                <a class="bth btn-success" href="/Bookmarks/Index">Cauta postari!</a>
+            }
+            else
+            {
+                <p class="text-white">Momentan acest user nu are postari salvate!</p>
+            }
+
+        </div>
+    }
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,99 @@
+﻿@model Asteria.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Edit Profile";
+}
+
+<div class="text-white">
+<form asp-controller="Users" asp-action="Edit" method="post" enctype="multipart/form-data">
+<input type="hidden" value=@Model.Id />
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.Label("Nickname", "Nickname", new { @class = "lead" })
+
+    <br />
+
+    @Html.EditorFor(m => m.Nickname)
+    <br />
+    @Html.ValidationMessageFor(m => m.Nickname, null, new { @class = "text-danger" })
+    <br />
+    
+    @Html.Label("Email", "Email", new { @class = "lead" })
+
+    <br />
+
+    @Html.EditorFor(m => m.Email)
+
+    <br />
+    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+    <br/>
+
+    <i class="bi bi-phone"></i>
+    @Html.Label("PhoneNumber", "Phone Number")
+
+    <br />
+
+    @Html.EditorFor(m => m.PhoneNumber)
+
+    <br />
+
+    <i class="bi bi-person"></i>
+    @Html.Label("FirstName", "First Name", new { @class = "" })
+
+    <br />
+
+    @Html.EditorFor(m => m.FirstName)
+
+    <br />
+
+    <i class="bi bi-person"></i>
+    @Html.Label("LastName", "Last Name", new { @class = "" })
+
+    <br />
+
+    @Html.EditorFor(m => m.LastName)
+
+    <br />
+
+    @if (User.IsInRole("Admin"))
+    {
+        <i class="bi bi-card-list"></i>
+        <label>Selectati rolul</label>
+            @Html.DropDownList("newRole", new SelectList(Model.AllRoles, "Value", "Text", ViewBag.UserRole), null, new { @class = "form-control" })
+
+        <br />
+    }
+    else
+    {
+        <input type="hidden" name="newRole" value="@ViewBag.UserRole" />
+    }
+
+
+    @Html.Label("ProfilePic", "Profile Picture", new { @class = "" })
+
+    <br />
+        @if (Model.ProfilePic != null)
+        {
+            <img id="imgPicture" style="width:300px;height:300px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(@Model.ProfilePic))">
+        }
+        else
+        {
+            <img id="imgPicture" style="width:300px;height:300px; object-fit:cover" src="">
+        }
+        <br />
+        <input type="file"
+               accept=".png,.jpg,.jpeg,.gif,.tif"
+               name="ProfilePic"
+               class="form-control"
+               style="border:0px!important;padding: 0px;padding-top: 10px;padding-bottom: 30px;"
+               onchange="document.getElementById('imgPicture').src = window.URL.createObjectURL(this.files[0])" />
+
+
+    <br />
+    @Html.ValidationMessageFor(m => m.ProfilePic, null, new { @class = "text-danger" })
+    <br />
+    <button class="btn btn-sm btn-success" type="submit">Edit</button>
+</form>
+</div>
+

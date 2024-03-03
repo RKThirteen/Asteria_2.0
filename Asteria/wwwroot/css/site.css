@@ -161,30 +161,30 @@ nav#navigation {
     list-style-type: none;
 }
 
-    nav#navigation > ul > li {
+    nav#navigation ul > li {
         display: inline-block;
         padding: 0px 20px;
         position: relative;
     }
 
-        nav#navigation > ul > li,
-        nav#navigation > ul > li > a:not(.active) {
+        nav#navigation ul > li,
+        nav#navigation ul > li > a:not(.active), form > button:not(.active) {
             transition: all 0.3s ease 0s;
             text-decoration: none;
             font-size: 1rem;
         }
 
-            nav#navigation > ul > li > a:hover {
+            nav#navigation ul > li > a:hover, form > button:hover {
                 display: initial;
                 color: blue;
             }
 
-            nav#navigation > ul > li.hover:hover .dropdown {
+            nav#navigation  ul > li.hover:hover .dropdown {
                 display: block;
             }
 
 @media screen and (max-width:600px) {
-    .dropdown > li > a:hover {
+    .dropdown > li > a:hover, form > button:hover {
         margin-bottom: 100px;
     }
 
@@ -208,11 +208,11 @@ nav#navigation {
         padding: 5px;
     }
 
-        .dropdown > li > a {
+        .dropdown > li > a, form > button {
             transition-duration: 0.4s;
         }
 
-            .dropdown > li > a:hover {
+            .dropdown > li > a:hover, form > button :hover {
                 color: blue;
             }
 
@@ -1142,4 +1142,9 @@ label.whattext {
     border-radius: 30%;
     width: 150px;
     height: 40px;
+}
+
+.comentariu {
+    color: whitesmoke;
+    overflow: hidden;
 }

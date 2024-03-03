@@ -117,6 +117,29 @@ namespace Asteria.Data.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("Asteria.Models.PostCollection", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CollectionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PostDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id", "PostId", "CollectionId");
+
+                    b.HasIndex("CollectionId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostCollections");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -378,6 +401,25 @@ namespace Asteria.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Asteria.Models.PostCollection", b =>
+                {
+                    b.HasOne("Asteria.Models.Collection", "Collection")
+                        .WithMany("PostCollections")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Asteria.Models.Post", "Post")
+                        .WithMany("PostCollections")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -429,9 +471,16 @@ namespace Asteria.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Asteria.Models.Collection", b =>
+                {
+                    b.Navigation("PostCollections");
+                });
+
             modelBuilder.Entity("Asteria.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("PostCollections");
                 });
 
             modelBuilder.Entity("Asteria.Models.ApplicationUser", b =>

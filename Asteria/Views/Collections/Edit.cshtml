@@ -1,0 +1,31 @@
+﻿@model Asteria.Models.Collection
+
+
+@{
+    ViewBag.Title = "Edit collection";
+}
+
+<h2 class="text-center text-white lead" style="font-size:30px">@ViewBag.Title</h2>
+
+<div class="text-white">
+@using (Html.BeginForm(controllerName: "Categories", actionName: "Edit", method: FormMethod.Post,routeValues: new { id = Model.Id }))
+{
+    @Html.Label("CollectionName", "Collection Name")
+    <br />
+        @Html.Editor("CollectionName")
+
+    @Html.ValidationMessageFor(m => m.CollectionName, null, new { @class = "text-danger" })
+    <br />
+
+    @Html.Label("Description", "Edit Description")
+    <br />
+    @Html.Editor("Description")
+
+    @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger" })
+    <br />
+
+    <br />
+
+    <button class="btn btn-success" type="submit">Modify</button>
+}
+</div>

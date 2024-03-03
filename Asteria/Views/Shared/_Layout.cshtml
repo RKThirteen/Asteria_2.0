@@ -18,48 +18,48 @@
 		<div class="nvbr">
 			<img class="logo" src="./asteria-logo.png" alt="Logo">
 			<nav id="navigation">
+              <div class="container-fluid">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 				<ul>
 					<li>
-						<a class="active" href="./index.html">Home</a>
+						<a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 					</li>
 					<li>
-						<a href="./what-is-asteria.html">What is This Place?</a>
+						<a asp-area="" asp-controller="Home" asp-action="Info" >What is This Place?</a>
 					</li>
-					<li class="hover">
-						<a>Art</a>
-						<ul class="dropdown">
-							<li>
-								<a class="active" href="./art.html#recent"> Recent</a>
-							</li>
-							<li>
-								<a href="./art.html#favourites"> Favourites</a>
-							</li>
-							<li>
-								<a href="./art.html#old"> Ye Olde Days </a>
-							</li>
-							<li>
-								<a href="./art.html#dev"> In Development</a>
-							</li>
-						</ul>
+					<li>
+						<a asp-area="" asp-controller="Posts" asp-action="Index">Search for posts</a>
 					</li>
-					<li class="hover">
-						<a>Our Pictures</a>
-						<ul class="dropdown">
-							<li>
-								<a class="active" href="./our-pictures.html#gallery1"> 1up!</a>
-							</li>
-							<li>
-								<a href="./our-pictures.html#gallery2"> Old Friends</a>
-							</li>
-							<li>
-								<a href="./our-pictures.html#gallery3"> Funny </a>
-							</li>
-							<li>
-								<a href="./art.html#gallery4"> With love </a>
-							</li>
-						</ul>
-					</li>
-				</ul>
+					 @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Collections" asp-action="Index">Your collections</a>
+                            </li>
+                        }
+                      
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">User List</a>
+                            </li>
+                        }
+                    <li>
+                    <form method="GET" asp-controller="Posts" asp-action="Index">
+                        <div class="input-group mb-7">
+                            <input type="text" class="form-control"
+                                   placeholder="Search" name="search"
+                                   value="@ViewBag.SearchString">
+                            <button class="btn btn-outline-success btn-edit-outline"
+                                    type="submit">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                    </li>
+                   </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+             </div>
 			</nav>
 			<div id="character"></div>
 		</div>
@@ -73,7 +73,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer >
 		<div class="socialmedia">
 			<a href="#l1" class="ig"> Instagram </a>
 			<a href="#l1" class="fb"> Facebook </a>
@@ -86,7 +86,7 @@
 			<p class="tiny"> <a href="./resurse.html"> Resurse</a></p>
 		</div>
         <div class="container">
-            &copy; 2024 - Asteria - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - Asteria - <a asp-area="" asp-controller="Home" asp-action="Resources">Resources</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
