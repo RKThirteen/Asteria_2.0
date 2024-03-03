@@ -16,7 +16,7 @@
 }
 else
 {
-    <h2 class="text-white"> Profilul of @Model.Nickname </h2>
+    <h2 class="text-white"> Profile of @Model.Nickname </h2>
 }
 <br />
 <div class="card mt-3" style="height:100%; width: 100%;">
@@ -53,7 +53,7 @@ else
         <div class="d-flex flex-row justify-content-between p-3">
             @if (ViewBag.EsteAdmin == true || ViewBag.UserCurent == Model.Id && ViewBag.AfisareButoane == true)
             {
-                <a class="btn btn-success" href="/Users/Edit/@Model.Id">Editeaza profilul</a>
+                <a class="btn btn-success" href="/Users/Edit/@Model.Id">Edit profile</a>
             }
             @if ((string)Model.Id != ViewBag.UserCurent && ViewBag.EsteAdmin == true)
             {
@@ -62,7 +62,7 @@ else
                 @using (Html.BeginForm(actionName: "Delete", controllerName: "Users", method: FormMethod.Post, routeValues: new { id = @Model.Id }))
                 {
 
-                    <button class="btn btn-danger" type="submit">Sterge utilizator</button>
+                    <button class="btn btn-danger" type="submit">Delete user</button>
 
                 }
             }
@@ -72,19 +72,19 @@ else
     </div>
 </div>
 <div class="" d-flex align-items-center"">
-    <h3 class="text-white"> Postari salvate </h3>
+    <h3 class="text-white"> Saved posts </h3>
 
     @if (userposts.Count > 0)
     {
         @foreach (var bm in userposts)
         {
-            <a class="btn btnn-success m-2" href="/Bookmarks/Show/@bm.Id">
+            <a class="btn btnn-success m-2" href="/Posts/Show/@bm.Id">
                 <div class="col-12">
                     <div class="card" style="width: 100%;">
 
                         <div class="card-body m-2">
 
-                            @Html.Partial("BookmarkInfo", @bm)
+                            @Html.Partial("PostInfo", @bm)
 
                         </div>
                     </div>
@@ -99,11 +99,11 @@ else
             @if (ViewBag.UserCurent == Model.Id)
             {
                 <p class="text-white">Momentan nu ai postari salvate!</p>
-                <a class="bth btn-success" href="/Bookmarks/Index">Cauta postari!</a>
+                <a class="bth btn-success" href="/Posts/Index">Search for posts</a>
             }
             else
             {
-                <p class="text-white">Momentan acest user nu are postari salvate!</p>
+                <p class="text-white">This user has no saved posts yet</p>
             }
 
         </div>
