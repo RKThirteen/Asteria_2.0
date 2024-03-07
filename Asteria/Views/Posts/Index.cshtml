@@ -1,4 +1,4 @@
-﻿@model Asteria.Models.Post
+﻿
 
 @{
     ViewBag.Title = "Posts";
@@ -13,7 +13,7 @@
 <h2 class="text-center text-white lead" style="font-size:30px">Art gallery!</h2>
 
 <br />
-@if (ViewBag.Bookmarks == null)
+@if (ViewBag.Posts == null)
 {
     <a class="a-tw nav-link" href="Posts/DateOrLike/1"><h2>Postari Recente</h2></a>
     <br />

@@ -11,6 +11,17 @@ namespace Asteria.Models
         public virtual ICollection<Collection>? Collections { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }
 
+        //friends
+        public virtual List<ApplicationUser>? Friends { get; set; } = new List<ApplicationUser>();
+
+        //contacts-->anyone who sent messages to our user/anyone to who the user sent a message to
+        public virtual List<ApplicationUser>? ContactList { get; set; } = new List<ApplicationUser>();
+
+        //friend requests
+        public virtual List<ApplicationUser>? FriendRequests { get; set; } = new List<ApplicationUser>();
+
+        public virtual List<ApplicationUser>? Pending { get; set; } = new List<ApplicationUser>();
+
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 
@@ -21,5 +32,6 @@ namespace Asteria.Models
 
         [NotMapped]
         public IEnumerable<SelectListItem>? AllRoles { get; set; }
+
     }
 }

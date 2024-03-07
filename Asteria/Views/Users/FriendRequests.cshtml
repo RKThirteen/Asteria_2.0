@@ -1,0 +1,69 @@
+﻿@model Asteria.Models.ApplicationUser
+
+@{
+    ViewBag.Title = @Model.Nickname;
+}
+
+@if (TempData.ContainsKey("message"))
+{
+    <h2 class=@TempData["messageType"]>@TempData["message"]</h2>
+}
+
+@{
+    List<ApplicationUser> F = ViewBag.F;
+}
+
+    <h2 class="text-white"> Pending friend requests </h2>
+
+<div class="d-flex card mt-3 bg-black flex-row" style="height:100%; width: 100%;">
+    @if(F.Count > 0)
+    {
+        @foreach (var req in ViewBag.F)
+        {
+            <div class="card-body d-flex justify-content-between flex-column text-white">
+                <div>
+                    <p style="20px"><i class="bi bi-person"> </i> Nickname: @req.Nickname</p>
+                    <p class="text-white"> Profile Picture:</p>
+                    @if (Model.ProfilePic != null)
+                    {
+                        <img style="width:65px;height:65px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(@req.ProfilePic))">
+                    }
+                    <form method="post" asp-controller="Users" asp-action="AcceptFriendRequest">
+                        <input type="hidden" name="senderId" value=@req.Id>
+                        <input type="hidden" name="receiverId" value=@ViewBag.UserCurent>
+                        <button type="submit" class="btn btn-success">Accept</button>
+                    </form>
+
+                    <form method="post" asp-controller="Users" asp-action="RejectFriendRequest">
+                        <input type="hidden" name="senderId" value=@req.Id>
+                        <input type="hidden" name="receiverId" value=@ViewBag.UserCurent>
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                    </form>
+
+
+
+                </div>
+
+            </div>
+        }
+        <a class="btn btn-success" herf="/Users/Show/@Model.Id">Back to Profile</a>
+    }
+    else
+    {
+        <div class="card-body d-flex justify-content-between text-white">
+        <p class="text-white">No friend Requests!</p>
+            <a class="btn btn-success" herf="/Users/Show/@Model.Id">Back to Profile</a>
+        </div>
+    }
+   
+
+</div>
+
+
+
+
+
+
+
+
+

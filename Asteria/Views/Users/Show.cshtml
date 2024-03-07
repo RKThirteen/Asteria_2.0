@@ -21,7 +21,7 @@ else
 <br />
 <div class="card mt-3" style="height:100%; width: 100%;">
 
-    <div class="card-body d-flex justify-content-between flex-column text-white">
+    <div class="card-body d-flex justify-content-between flex-column text-white bg-black">
         <div>
             <p style="20px"><i class="bi bi-person"> </i> Nickname: @Model.Nickname</p>
             <p class="text-white"> Profile Picture:</p>
@@ -46,6 +46,15 @@ else
                 }
             }
 
+            @if (ViewBag.UserCurent != Model.Id)
+            {
+                <form method="post" asp-controller="Users" asp-action="SendFriendRequest">
+                    <input type="hidden" name="senderId" value=@ViewBag.UserCurent>
+                    <input type="hidden" name="receiverId" value=@Model.Id>
+                    <button type="submit" class="btn btn-success">Add as friend?</button>
+                </form>
+            }
+
 
 
         </div>
@@ -54,6 +63,8 @@ else
             @if (ViewBag.EsteAdmin == true || ViewBag.UserCurent == Model.Id && ViewBag.AfisareButoane == true)
             {
                 <a class="btn btn-success" href="/Users/Edit/@Model.Id">Edit profile</a>
+                <a class="btn btn-success" href="/Users/FriendRequests/@Model.Id">Check Friend Requests</a>
+                <a class="btn btn-success" href="/Users/FriendList/@Model.Id">Friend List</a>
             }
             @if ((string)Model.Id != ViewBag.UserCurent && ViewBag.EsteAdmin == true)
             {

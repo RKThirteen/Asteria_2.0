@@ -250,6 +250,176 @@ namespace Asteria.Controllers
             }
 
         }
+        public async Task<ActionResult> FriendList(string id)
+        {
+            ApplicationUser user = db.Users.Find(id);
+
+            List<ApplicationUser> FriendsList = new List<ApplicationUser>();
+            if (user.Friends!=null)
+            {
+                FriendsList.AddRange(user.Friends);
+            }
+                
+            ViewBag.F = FriendsList;
+            return View(user);
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        public async Task<ActionResult> FriendRequests(string id)
+        {
+
+            SetAccesRights();
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != id)
+            {
+                TempData["message"] = "Can't access this tab";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("/Posts/Index");
+            }
+            else
+            {
+                var user = db.Users.Find(id);
+                List<ApplicationUser> Requests = new List<ApplicationUser>();
+                Requests.AddRange(user.Pending);
+
+                ViewBag.F = Requests;
+                return View(user);
+            }
+
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> SendFriendRequest(string senderId, string receiverId)
+        {
+            SetAccesRights();
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != senderId)
+            {
+                TempData["message"] = "Can't access this tab";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Posts/Index");
+            }
+            else
+            {
+                var receiver = db.Users.Where(us=>us.Id==receiverId).FirstOrDefault();
+                var sender = db.Users.Where(us=>us.Id==senderId).FirstOrDefault();
+
+                if (receiver.FriendRequests.Contains(sender) && receiver.FriendRequests != null)
+                {
+                    TempData["message"] = "You have already sent a request to this person";
+                    TempData["messageType"] = "alert-danger";
+                    return Redirect("/Users/Show/" + receiverId);
+                }
+                else
+                {
+                    receiver.Pending.Add(sender);
+                    sender.FriendRequests.Add(receiver);
+                    
+                    db.SaveChanges();
+                    TempData["message"] = "Friend request sent!";
+                    TempData["messageType"] = "alert-danger";
+                    return Redirect("/Users/Show/" + receiverId);
+                }
+            }
+            
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> AcceptFriendRequest(string senderId, string receiverId)
+        {
+            SetAccesRights();
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != receiverId)
+            {
+                TempData["message"] = "Can't access this tab";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Posts/Index");
+            }
+            else
+            {
+                var receiver = db.Users.Find(receiverId);
+                var sender = db.Users.Find(senderId);
+
+                if (!receiver.FriendRequests.Contains(sender) && receiver.FriendRequests!=null)
+                {
+                    TempData["message"] = "You have no friend request from this person";
+                    TempData["messageType"] = "alert-danger";
+                    return Redirect("/Users/Show/" + receiverId);
+                }
+                else
+                {
+                    receiver.Pending.Remove(sender);
+                    sender.FriendRequests.Remove(receiver);
+                    receiver.Friends.Add(sender);
+                    sender.Friends.Add(receiver);
+                    await _userManager.UpdateAsync(receiver);
+                    await _userManager.UpdateAsync(sender);
+                    db.SaveChanges();
+                    TempData["message"] = "Friend request accepted!";
+                    TempData["messageType"] = "alert-danger";
+                    return Redirect("/Users/Show/" + senderId);
+                }
+            }
+
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> RejectFriendRequest(string senderId, string receiverId)
+        {
+            SetAccesRights();
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != senderId)
+            {
+                TempData["message"] = "Can't access this tab";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Posts/Index");
+            }
+            else
+            {
+                var receiver = db.Users.Find(receiverId);
+                var sender = db.Users.Find(senderId);
+
+                if (!receiver.FriendRequests.Contains(sender) && receiver.FriendRequests != null)
+                { 
+                    TempData["message"] = "You have no friend request from this person";
+                    TempData["messageType"] = "alert-danger";
+                    return Redirect("/Users/Show/" + receiverId);
+                }
+                else
+                {
+                    receiver.Pending.Remove(sender);
+                    sender.FriendRequests.Remove(receiver);
+                    db.SaveChanges();
+                    TempData["message"] = "Friend request rejected!";
+                    TempData["messageType"] = "alert-danger";
+                    return Redirect("/Users/Show/" + senderId);
+                }
+            }
+        }
+
+        [Authorize(Roles = "User,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> RemoveFromFriends(string senderId, string receiverId)
+        {
+            SetAccesRights();
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != receiverId)
+            {
+                TempData["message"] = "Can't access this tab";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("/Posts/Index");
+            }
+            else
+            {
+                var receiver = db.Users.Find(receiverId);
+                var sender = db.Users.Find(senderId);
+                receiver.Friends.Remove(sender);
+                sender.Friends.Remove(receiver);
+                db.SaveChanges();
+                TempData["message"] = "User removed from friend list";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Users/Show/" + receiverId);
+            }
+
+        }
 
 
         [NonAction]

@@ -16,7 +16,7 @@
         <a  href="/Users/Show/@UserManager.GetUserId(User)" title="Manage">Hello @user.Nickname </a>
     </li> 
     <li>
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Bookmarks", new { area = "" })">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button  type="submit">Logout</button>
         </form>
     </li>

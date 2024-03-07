@@ -35,6 +35,8 @@ namespace Asteria.Data
                 .HasOne(ab => ab.Collection)
                 .WithMany(ab => ab.PostCollections)
                 .HasForeignKey(ab => ab.CollectionId);
+
+
         }
     }
 }

@@ -61,13 +61,13 @@ namespace Asteria.Controllers
             ViewBag.SearchString = search;
             if (search != "")
             {
-                ViewBag.PaginationBaseUrl = "/Articles/Index/?search="
+                ViewBag.PaginationBaseUrl = "/Posts/Index/?search="
                 + search;
 
             }
             else
             {
-                ViewBag.PaginationBaseUrl = "/Articles/Index";
+                ViewBag.PaginationBaseUrl = "/Posts/Index";
             }
             return View();
         }
