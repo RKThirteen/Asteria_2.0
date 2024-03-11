@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Drawing.Text;
 
 namespace Asteria.Controllers
 {
@@ -252,15 +253,13 @@ namespace Asteria.Controllers
         }
         public async Task<ActionResult> FriendList(string id)
         {
+            SetAccesRights();
             ApplicationUser user = db.Users.Find(id);
-
-            List<ApplicationUser> FriendsList = new List<ApplicationUser>();
-            if (user.Friends!=null)
-            {
-                FriendsList.AddRange(user.Friends);
-            }
-                
-            ViewBag.F = FriendsList;
+            var friends = db.Friends
+                               .Include("Friendship")
+                               .Where(fr => fr.FriendshipId == id)
+                               .OrderBy(fr => fr.DateAccepted);
+            ViewBag.Fr = friends;
             return View(user);
         }
 
@@ -278,10 +277,11 @@ namespace Asteria.Controllers
             else
             {
                 var user = db.Users.Find(id);
-                List<ApplicationUser> Requests = new List<ApplicationUser>();
-                Requests.AddRange(user.Pending);
-
-                ViewBag.F = Requests;
+                var requests = db.FriendRequests
+                               .Include("Sender") 
+                               .Where(fr => fr.ReceiverId == id)
+                               .OrderBy(fr => fr.DateSent);
+                ViewBag.F = requests;
                 return View(user);
             }
 
@@ -289,46 +289,58 @@ namespace Asteria.Controllers
 
         [Authorize(Roles = "User,Admin")]
         [HttpPost]
-        public async Task<IActionResult> SendFriendRequest(string senderId, string receiverId)
+        public async Task<IActionResult> SendFriendRequest([FromForm] FriendRequest fr)
         {
             SetAccesRights();
-            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != senderId)
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != fr.SenderId)
             {
-                TempData["message"] = "Can't access this tab";
+                TempData["message"] = "Can't send friend request";
                 TempData["messageType"] = "alert-danger";
                 return Redirect("/Posts/Index");
             }
             else
             {
-                var receiver = db.Users.Where(us=>us.Id==receiverId).FirstOrDefault();
-                var sender = db.Users.Where(us=>us.Id==senderId).FirstOrDefault();
-
-                if (receiver.FriendRequests.Contains(sender) && receiver.FriendRequests != null)
+                if (ModelState.IsValid)
                 {
-                    TempData["message"] = "You have already sent a request to this person";
-                    TempData["messageType"] = "alert-danger";
-                    return Redirect("/Users/Show/" + receiverId);
+                    if (db.FriendRequests
+                       .Where(ab => ab.SenderId == fr.SenderId)
+                       .Where(ab => ab.ReceiverId == fr.ReceiverId)
+                       .Count() > 0)
+                    {
+                        TempData["message"] = "You have already sent a friend request to that person";
+                        TempData["messageType"] = "alert-danger";
+                        return Redirect("/Users/Show/" + fr.SenderId);
+                    }
+                    else
+                    {
+                        fr.DateSent = DateTime.Now;
+                        db.FriendRequests.Add(fr);
+                        db.SaveChanges();
+
+                        TempData["message"] = "Friend request send";
+                        TempData["messageType"] = "alert-success";
+                        return Redirect("/Users/Show/" + fr.SenderId);
+                    }
+
                 }
                 else
                 {
-                    receiver.Pending.Add(sender);
-                    sender.FriendRequests.Add(receiver);
-                    
-                    db.SaveChanges();
-                    TempData["message"] = "Friend request sent!";
+                    //shouldn't get here
+                    TempData["message"] = "Something went wrong with sending friend requests";
                     TempData["messageType"] = "alert-danger";
-                    return Redirect("/Users/Show/" + receiverId);
+                    return Redirect("/Users/Show/" + fr.SenderId);
                 }
+                
             }
             
         }
 
         [Authorize(Roles = "User,Admin")]
         [HttpPost]
-        public async Task<IActionResult> AcceptFriendRequest(string senderId, string receiverId)
+        public async Task<IActionResult> AcceptFriendRequest([FromForm] Friend f)
         {
             SetAccesRights();
-            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != receiverId)
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != f.UserId)
             {
                 TempData["message"] = "Can't access this tab";
                 TempData["messageType"] = "alert-danger";
@@ -336,27 +348,40 @@ namespace Asteria.Controllers
             }
             else
             {
-                var receiver = db.Users.Find(receiverId);
-                var sender = db.Users.Find(senderId);
-
-                if (!receiver.FriendRequests.Contains(sender) && receiver.FriendRequests!=null)
+                if (ModelState.IsValid)
                 {
-                    TempData["message"] = "You have no friend request from this person";
-                    TempData["messageType"] = "alert-danger";
-                    return Redirect("/Users/Show/" + receiverId);
+                    if (db.Friends
+                       .Where(ab => ab.UserId == f.UserId)
+                       .Where(ab => ab.FriendshipId == f.FriendshipId)
+                       .Count() > 0)
+                    {
+                        TempData["message"] = "You have already send a friend request to that person";
+                        TempData["messageType"] = "alert-danger";
+                        return Redirect("/Users/FriendRequests/" + f.UserId);
+                    }
+                    else
+                    {
+                        FriendRequest fr = db.FriendRequests
+                                         .Where(fr => fr.SenderId == f.FriendshipId)
+                                         .Where(fr => fr.ReceiverId == f.UserId)
+                                         .FirstOrDefault();
+                        f.DateAccepted = DateTime.Now;
+                        db.Friends.Add(f);
+                        db.FriendRequests.Remove(fr);
+                        db.SaveChanges();
+
+                        TempData["message"] = "Friend request send";
+                        TempData["messageType"] = "alert-success";
+                        return Redirect("/Users/FriendRequests/" + f.UserId);
+                    }
+
                 }
                 else
                 {
-                    receiver.Pending.Remove(sender);
-                    sender.FriendRequests.Remove(receiver);
-                    receiver.Friends.Add(sender);
-                    sender.Friends.Add(receiver);
-                    await _userManager.UpdateAsync(receiver);
-                    await _userManager.UpdateAsync(sender);
-                    db.SaveChanges();
-                    TempData["message"] = "Friend request accepted!";
+                    //shouldn't get here
+                    TempData["message"] = "Something went wrong with sending friend requests";
                     TempData["messageType"] = "alert-danger";
-                    return Redirect("/Users/Show/" + senderId);
+                    return Redirect("/Users/FriendRequests/" + f.UserId);
                 }
             }
 
@@ -375,33 +400,24 @@ namespace Asteria.Controllers
             }
             else
             {
-                var receiver = db.Users.Find(receiverId);
-                var sender = db.Users.Find(senderId);
-
-                if (!receiver.FriendRequests.Contains(sender) && receiver.FriendRequests != null)
-                { 
-                    TempData["message"] = "You have no friend request from this person";
-                    TempData["messageType"] = "alert-danger";
-                    return Redirect("/Users/Show/" + receiverId);
-                }
-                else
-                {
-                    receiver.Pending.Remove(sender);
-                    sender.FriendRequests.Remove(receiver);
-                    db.SaveChanges();
-                    TempData["message"] = "Friend request rejected!";
-                    TempData["messageType"] = "alert-danger";
-                    return Redirect("/Users/Show/" + senderId);
-                }
+                FriendRequest fr = db.FriendRequests
+                                         .Where(fr => fr.SenderId == senderId)
+                                         .Where(fr => fr.ReceiverId == receiverId)
+                                         .FirstOrDefault();
+                db.FriendRequests.Remove(fr);
+                db.SaveChanges();
+                TempData["message"] = "Friend request rejected";
+                TempData["messageType"] = "alert-success";
+                return Redirect("/Users/FriendRequests/"+receiverId);
             }
         }
 
         [Authorize(Roles = "User,Admin")]
         [HttpPost]
-        public async Task<IActionResult> RemoveFromFriends(string senderId, string receiverId)
+        public async Task<IActionResult> RemoveFromFriends(string userId, string friendshipId)
         {
             SetAccesRights();
-            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != receiverId)
+            if (!User.IsInRole("Admin") && _userManager.GetUserId(User).ToString() != userId)
             {
                 TempData["message"] = "Can't access this tab";
                 TempData["messageType"] = "alert-danger";
@@ -409,14 +425,15 @@ namespace Asteria.Controllers
             }
             else
             {
-                var receiver = db.Users.Find(receiverId);
-                var sender = db.Users.Find(senderId);
-                receiver.Friends.Remove(sender);
-                sender.Friends.Remove(receiver);
+                Friend friendship = db.Friends
+                                  .Where(f => f.FriendshipId == friendshipId)
+                                  .Where(f => f.UserId == userId)
+                                  .FirstOrDefault();
+                db.Remove(friendship);
                 db.SaveChanges();
                 TempData["message"] = "User removed from friend list";
                 TempData["messageType"] = "alert-danger";
-                return Redirect("/Users/Show/" + receiverId);
+                return Redirect("/Users/Show/" + userId);
             }
 
         }

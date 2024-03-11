@@ -30,7 +30,7 @@ body {
 }
 header {
     position: relative;
-    min-height: 100vh;
+    min-height: 20vh;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -760,9 +760,7 @@ span {
     animation-delay: 2s;
 }
 
-    span::after {
-        content: "<3";
-    }
+
 
 .gallrow {
     display: flex;
@@ -1147,4 +1145,8 @@ label.whattext {
 .comentariu {
     color: whitesmoke;
     overflow: hidden;
+}
+
+.note-editor .dropdown-toggle::after {
+    display: none;
 }

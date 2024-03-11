@@ -7,7 +7,7 @@
 <h2 class="text-center text-white lead" style="font-size:30px">Creeaza o postare</h2>
 <br />
 <div class="text-white">
-<form method="post" action="/Bookmarks/New">
+<form method="post" action="/Posts/New">
    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
    <div class="container">
    <div class="row">
@@ -15,7 +15,7 @@
                 <div class="mb-3">
                     @Html.Label("Content","Post Content")
                     <br />
-                        @Html.TextArea("Content", null, new { @class = "summernote", style="background-color: whitesmoke;"})
+                        @Html.TextArea("Content", null, new { @class = "summernote", style="background-color: black;"})
                     <br />
                     @Html.ValidationMessageFor(m => m.Content, null, new { @class = "text-danger" })
                     <br />

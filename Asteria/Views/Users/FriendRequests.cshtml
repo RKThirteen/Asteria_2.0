@@ -9,34 +9,32 @@
     <h2 class=@TempData["messageType"]>@TempData["message"]</h2>
 }
 
-@{
-    List<ApplicationUser> F = ViewBag.F;
-}
 
     <h2 class="text-white"> Pending friend requests </h2>
 
-<div class="d-flex card mt-3 bg-black flex-row" style="height:100%; width: 100%;">
-    @if(F.Count > 0)
+<div class="d-flex card mt-3 bg-black flex-column" style="height:100%; width: 100%;">
+    @if(ViewBag.F!=null)
     {
         @foreach (var req in ViewBag.F)
         {
-            <div class="card-body d-flex justify-content-between flex-column text-white">
+            <div class="card-body d-flex justify-content-between flex-column text-white bg-black">
                 <div>
-                    <p style="20px"><i class="bi bi-person"> </i> Nickname: @req.Nickname</p>
+                    <p style="20px"><i class="bi bi-person"> </i> Nickname: @req.Sender.Nickname</p>
                     <p class="text-white"> Profile Picture:</p>
-                    @if (Model.ProfilePic != null)
+                    @if (req.Sender.ProfilePic != null)
                     {
-                        <img style="width:65px;height:65px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(@req.ProfilePic))">
+                        <img style="width:65px;height:65px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(@req.Sender.ProfilePic))">
                     }
+                    <p class="text-white">Sent at @req.DateSent</p>
                     <form method="post" asp-controller="Users" asp-action="AcceptFriendRequest">
-                        <input type="hidden" name="senderId" value=@req.Id>
-                        <input type="hidden" name="receiverId" value=@ViewBag.UserCurent>
+                        <input type="hidden" name="UserId" value=@ViewBag.UserCurent>
+                        <input type="hidden" name="FriendshipId" value=@req.SenderId>
                         <button type="submit" class="btn btn-success">Accept</button>
                     </form>
 
                     <form method="post" asp-controller="Users" asp-action="RejectFriendRequest">
-                        <input type="hidden" name="senderId" value=@req.Id>
-                        <input type="hidden" name="receiverId" value=@ViewBag.UserCurent>
+                        <input type="hidden" name="SenderId" value=@req.SenderId>
+                        <input type="hidden" name="ReceiverId" value=@ViewBag.UserCurent>
                         <button type="submit" class="btn btn-danger">Reject</button>
                     </form>
 
@@ -46,13 +44,13 @@
 
             </div>
         }
-        <a class="btn btn-success" herf="/Users/Show/@Model.Id">Back to Profile</a>
+        <a class="btn btn-success" href="/Users/Show/@Model.Id">Back to Profile</a>
     }
     else
     {
         <div class="card-body d-flex justify-content-between text-white">
         <p class="text-white">No friend Requests!</p>
-            <a class="btn btn-success" herf="/Users/Show/@Model.Id">Back to Profile</a>
+            <a class="btn btn-success" href="/Users/Show/@Model.Id">Back to Profile</a>
         </div>
     }
    

@@ -16,6 +16,8 @@ namespace Asteria.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<PostCollection> PostCollections { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
+        public DbSet<Friend> Friends { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +38,35 @@ namespace Asteria.Data
                 .WithMany(ab => ab.PostCollections)
                 .HasForeignKey(ab => ab.CollectionId);
 
+            modelBuilder.Entity<FriendRequest>()
+                .HasKey(f => new { f.Id, f.SenderId, f.ReceiverId });
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(f => f.Sender)
+                .WithMany(u => u.FriendRequestsSent)
+                .HasForeignKey(f => f.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(f => f.Receiver)
+                .WithMany(u => u.FriendRequestsReceived)
+                .HasForeignKey(f => f.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Friend>()
+                .HasKey(f => new { f.Id, f.UserId, f.FriendshipId });
+
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.User)
+                .WithMany(u => u.Friend1)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.Friendship)
+                .WithMany(u => u.Friend2)
+                .HasForeignKey(f => f.FriendshipId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

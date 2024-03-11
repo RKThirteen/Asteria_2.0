@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using Ganss.Xss;
+using Microsoft.Extensions.Hosting;
 
 namespace Asteria.Controllers
 {
@@ -68,6 +69,8 @@ namespace Asteria.Controllers
             else
             {
                 ViewBag.PaginationBaseUrl = "/Posts/Index";
+                var posts = db.Posts.Include("User").OrderBy(p => p.Title);
+                ViewBag.Posts = posts;
             }
             return View();
         }

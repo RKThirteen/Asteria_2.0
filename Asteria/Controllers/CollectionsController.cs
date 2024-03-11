@@ -41,19 +41,19 @@ namespace Asteria.Controllers
 
             if (User.IsInRole("Admin"))
             {
-                var categories = from category in db.Collections.Include("User")
-                                 orderby category.CollectionName
-                                 select category;
-                ViewBag.Categories = categories;
+                var collections = from collection in db.Collections.Include("User")
+                                 orderby collection.CollectionName
+                                 select collection;
+                ViewBag.Collections = collections;
 
             }
             else if (User.IsInRole("User"))
             {
-                var categories = from category in db.Collections.Include("User")
+                var collections = from collection in db.Collections.Include("User")
                                  .Where(col => col.UserId == _userManager.GetUserId(User))
-                                 orderby category.CollectionName
-                                 select category;
-                ViewBag.Categories = categories;
+                                 orderby collection.CollectionName
+                                 select collection;
+                ViewBag.Collections = collections;
 
             }
             return View();
@@ -64,42 +64,42 @@ namespace Asteria.Controllers
         public IActionResult Show(int id)
         {
             SetAccessRights();
-            Collection category = db.Collections.Find(id);
+            Collection collection = db.Collections.Find(id);
             if (User.IsInRole("User"))
             {
-                var categories = db.Collections
+                var collections = db.Collections
                                 .Include("PostCollections.Post.User")
                                 .Include("User")
                                 .Where(b => b.Id == id)
                                 .Where(b => b.UserId == _userManager.GetUserId(User))
                                 .FirstOrDefault();
 
-                if (categories == null)
+                if (collections == null)
                 {
                     TempData["message"] = "You don't have such a collection";
                     TempData["messageType"] = "alert-danger";
                     return RedirectToAction("Index", "Posts");
                 }
 
-                return View(categories);
+                return View(collections);
             }
             else
             if (User.IsInRole("Admin"))
             {
-                var categories = db.Collections
+                var collections = db.Collections
                                 .Include("PostCollections.Post.User")
                                 .Include("User")
                                 .Where(b => b.Id == id)
                                 .FirstOrDefault();
 
-                if (categories == null)
+                if (collections == null)
                 {
                     TempData["message"] = "Resource doesn't exist";
                     TempData["messageType"] = "alert-danger";
                     return RedirectToAction("Index", "Posts");
                 }
 
-                return View(categories);
+                return View(collections);
             }
 
             else

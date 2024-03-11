@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Asteria.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240305174332_friend_list")]
-    partial class friend_list
+    [Migration("20240311155936_friend_requests")]
+    partial class friend_requests
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,21 @@ namespace Asteria.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("ApplicationUserApplicationUser", b =>
+                {
+                    b.Property<string>("ContactListId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FriendsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ContactListId", "FriendsId");
+
+                    b.HasIndex("FriendsId");
+
+                    b.ToTable("ApplicationUserApplicationUser");
+                });
 
             modelBuilder.Entity("Asteria.Models.ApplicationUser", b =>
                 {
@@ -156,6 +171,29 @@ namespace Asteria.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Asteria.Models.FriendRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateSent")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id", "SenderId", "ReceiverId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("FriendRequests");
                 });
 
             modelBuilder.Entity("Asteria.Models.Post", b =>
@@ -357,6 +395,21 @@ namespace Asteria.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ApplicationUserApplicationUser", b =>
+                {
+                    b.HasOne("Asteria.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ContactListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Asteria.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("FriendsId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Asteria.Models.Collection", b =>
                 {
                     b.HasOne("Asteria.Models.ApplicationUser", "User")
@@ -379,6 +432,25 @@ namespace Asteria.Data.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Asteria.Models.FriendRequest", b =>
+                {
+                    b.HasOne("Asteria.Models.ApplicationUser", "Receiver")
+                        .WithMany("FriendRequestsReceived")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Asteria.Models.ApplicationUser", "Sender")
+                        .WithMany("FriendRequestsSent")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Asteria.Models.Post", b =>
@@ -465,6 +537,10 @@ namespace Asteria.Data.Migrations
                     b.Navigation("Collections");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("FriendRequestsReceived");
+
+                    b.Navigation("FriendRequestsSent");
 
                     b.Navigation("Posts");
                 });

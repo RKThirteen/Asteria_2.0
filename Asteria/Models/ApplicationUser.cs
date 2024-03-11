@@ -12,16 +12,19 @@ namespace Asteria.Models
         public virtual ICollection<Comment>? Comments { get; set; }
 
         //friends
-        public virtual List<ApplicationUser>? Friends { get; set; } = new List<ApplicationUser>();
+        public virtual ICollection<Friend> Friends { get; set; }
 
         //contacts-->anyone who sent messages to our user/anyone to who the user sent a message to
         public virtual List<ApplicationUser>? ContactList { get; set; } = new List<ApplicationUser>();
 
         //friend requests
-        public virtual List<ApplicationUser>? FriendRequests { get; set; } = new List<ApplicationUser>();
+        public virtual ICollection<FriendRequest> FriendRequestsSent { get; set; }
+        public virtual ICollection<FriendRequest> FriendRequestsReceived { get; set; }
 
-        public virtual List<ApplicationUser>? Pending { get; set; } = new List<ApplicationUser>();
+        //temp
 
+        public virtual ICollection<Friend> Friend1 { get; set; }
+        public virtual ICollection<Friend> Friend2 { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 

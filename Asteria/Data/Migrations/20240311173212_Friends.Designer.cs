@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Asteria.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240307102226_friendsss")]
-    partial class friendsss
+    [Migration("20240311173212_Friends")]
+    partial class Friends
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,9 @@ namespace Asteria.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -90,6 +93,8 @@ namespace Asteria.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -156,6 +161,57 @@ namespace Asteria.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Asteria.Models.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FriendshipId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateAccepted")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id", "UserId", "FriendshipId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("FriendshipId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Friends");
+                });
+
+            modelBuilder.Entity("Asteria.Models.FriendRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateSent")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id", "SenderId", "ReceiverId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("FriendRequests");
                 });
 
             modelBuilder.Entity("Asteria.Models.Post", b =>
@@ -357,6 +413,13 @@ namespace Asteria.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Asteria.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Asteria.Models.ApplicationUser", null)
+                        .WithMany("ContactList")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("Asteria.Models.Collection", b =>
                 {
                     b.HasOne("Asteria.Models.ApplicationUser", "User")
@@ -379,6 +442,48 @@ namespace Asteria.Data.Migrations
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Asteria.Models.Friend", b =>
+                {
+                    b.HasOne("Asteria.Models.ApplicationUser", null)
+                        .WithMany("Friends")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Asteria.Models.ApplicationUser", "Friendship")
+                        .WithMany("Friend2")
+                        .HasForeignKey("FriendshipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Asteria.Models.ApplicationUser", "User")
+                        .WithMany("Friend1")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Friendship");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Asteria.Models.FriendRequest", b =>
+                {
+                    b.HasOne("Asteria.Models.ApplicationUser", "Receiver")
+                        .WithMany("FriendRequestsReceived")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Asteria.Models.ApplicationUser", "Sender")
+                        .WithMany("FriendRequestsSent")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Asteria.Models.Post", b =>
@@ -465,6 +570,18 @@ namespace Asteria.Data.Migrations
                     b.Navigation("Collections");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("ContactList");
+
+                    b.Navigation("Friend1");
+
+                    b.Navigation("Friend2");
+
+                    b.Navigation("FriendRequestsReceived");
+
+                    b.Navigation("FriendRequestsSent");
+
+                    b.Navigation("Friends");
 
                     b.Navigation("Posts");
                 });

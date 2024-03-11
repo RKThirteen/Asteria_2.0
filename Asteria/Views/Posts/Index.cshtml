@@ -13,7 +13,7 @@
 <h2 class="text-center text-white lead" style="font-size:30px">Art gallery!</h2>
 
 <br />
-@if (ViewBag.Posts == null)
+@*@if (ViewBag.Posts == null)
 {
     <a class="a-tw nav-link" href="Posts/DateOrLike/1"><h2>Postari Recente</h2></a>
     <br />
@@ -58,10 +58,21 @@ else
             <br />
         </a>
     }
+}*@
+
+@foreach (Asteria.Models.Post post in ViewBag.Posts)
+{
+    <a class="btn btnn-success" href="/Posts/Show/@post.Id">
+
+        @Html.Partial("PostInfo", post)
+
+        <br />
+        <br />
+    </a>
 }
 @if (ViewBag.Bookmarks == null && ViewBag.BookmarksLike == null && ViewBag.BookmarksDate == null)
 { 
-    <div class="card card-text">
+    <div class="card card-text bg-black">
         <p class="text-white lead align-center">No post here :(</p>
         <a class="btn btn-success" href="/Home/Index"> Back to homepage</a>
     </div>
