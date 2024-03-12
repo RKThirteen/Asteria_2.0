@@ -161,20 +161,26 @@ nav#navigation {
     list-style-type: none;
 }
 
-    nav#navigation ul > li {
+.no-border {
+    background-color: transparent;
+    border: none;
+    color: var(--color-w1);
+}
+
+    nav#navigation ul > li, nav#navigation ul > li > form > button{
         display: inline-block;
         padding: 0px 20px;
         position: relative;
     }
 
         nav#navigation ul > li,
-        nav#navigation ul > li > a:not(.active), form > button:not(.active) {
+        nav#navigation ul > li > a:not(.active), nav#navigation ul > li > form > button:not(.active) {
             transition: all 0.3s ease 0s;
             text-decoration: none;
             font-size: 1rem;
         }
 
-            nav#navigation ul > li > a:hover, form > button:hover {
+            nav#navigation ul > li > a:hover, nav#navigation ul > li > form > button:hover {
                 display: initial;
                 color: blue;
             }

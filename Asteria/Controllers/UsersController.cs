@@ -257,7 +257,7 @@ namespace Asteria.Controllers
             ApplicationUser user = db.Users.Find(id);
             var friends = db.Friends
                                .Include("Friendship")
-                               .Where(fr => fr.FriendshipId == id)
+                               .Where(fr => fr.UserId == id)
                                .OrderBy(fr => fr.DateAccepted);
             ViewBag.Fr = friends;
             return View(user);
@@ -305,7 +305,12 @@ namespace Asteria.Controllers
                     if (db.FriendRequests
                        .Where(ab => ab.SenderId == fr.SenderId)
                        .Where(ab => ab.ReceiverId == fr.ReceiverId)
-                       .Count() > 0)
+                       .Count() > 0 ||
+                       db.Friends
+                       .Where(ab => ab.UserId == fr.ReceiverId)
+                       .Where(ab=> ab.FriendshipId == fr.SenderId)
+                       .Count() > 0
+                       )
                     {
                         TempData["message"] = "You have already sent a friend request to that person";
                         TempData["messageType"] = "alert-danger";
@@ -365,8 +370,15 @@ namespace Asteria.Controllers
                                          .Where(fr => fr.SenderId == f.FriendshipId)
                                          .Where(fr => fr.ReceiverId == f.UserId)
                                          .FirstOrDefault();
+
+                        Friend rev_f = f;
+                        string aux = rev_f.UserId;
+                        rev_f.UserId = rev_f.FriendshipId;
+                        rev_f.FriendshipId = aux;
+
                         f.DateAccepted = DateTime.Now;
                         db.Friends.Add(f);
+                        db.Friends.Add(rev_f);
                         db.FriendRequests.Remove(fr);
                         db.SaveChanges();
 
@@ -428,6 +440,12 @@ namespace Asteria.Controllers
                 Friend friendship = db.Friends
                                   .Where(f => f.FriendshipId == friendshipId)
                                   .Where(f => f.UserId == userId)
+                                  .FirstOrDefault();
+                db.Remove(friendship);
+
+                friendship = db.Friends
+                                  .Where(f => f.FriendshipId == userId)
+                                  .Where(f => f.UserId == friendshipId)
                                   .FirstOrDefault();
                 db.Remove(friendship);
                 db.SaveChanges();

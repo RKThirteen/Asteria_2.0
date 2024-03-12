@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Permissions;
 
 namespace Asteria.Models
 {
@@ -10,6 +11,7 @@ namespace Asteria.Models
 
         [Required(ErrorMessage = "Message must not be empty")]
         public string Text { get; set; }
+        public DateTime Received { get; set; }
         public string? SenderId { get; set; }
         public virtual ApplicationUser? Sender { get; set; }
         public string? ReceiverId { get; set; }
