@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\eduar\\source\\repos\\Asteria\\Asteria\\Asteria.csproj": {}
+    "C:\\Users\\eduar\\Documents\\GitHub\\Asteria_2.0\\Asteria\\Asteria.csproj": {}
   },
   "projects": {
-    "C:\\Users\\eduar\\source\\repos\\Asteria\\Asteria\\Asteria.csproj": {
+    "C:\\Users\\eduar\\Documents\\GitHub\\Asteria_2.0\\Asteria\\Asteria.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\eduar\\source\\repos\\Asteria\\Asteria\\Asteria.csproj",
+        "projectUniqueName": "C:\\Users\\eduar\\Documents\\GitHub\\Asteria_2.0\\Asteria\\Asteria.csproj",
         "projectName": "Asteria",
-        "projectPath": "C:\\Users\\eduar\\source\\repos\\Asteria\\Asteria\\Asteria.csproj",
+        "projectPath": "C:\\Users\\eduar\\Documents\\GitHub\\Asteria_2.0\\Asteria\\Asteria.csproj",
         "packagesPath": "C:\\Users\\eduar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\eduar\\source\\repos\\Asteria\\Asteria\\obj\\",
+        "outputPath": "C:\\Users\\eduar\\Documents\\GitHub\\Asteria_2.0\\Asteria\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\eduar\\AppData\\Roaming\\NuGet\\NuGet.Config",

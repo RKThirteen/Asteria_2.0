@@ -41,9 +41,5 @@ namespace Asteria.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> DeleteMessage(string id)
-        {
-            return View();
-        }
     }
 }

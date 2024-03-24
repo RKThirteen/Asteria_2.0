@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "J8rDO9S2b6vHqJt5JttCeIh0Mq63GScAEEQ6ICRbTRyvBjNDbgyURcJaS92lc7jp/B1PRXJAuJf6nNvEGj/YSg==",
+  "dgSpecHash": "Sq5hNwKpFUqsRFCssQqBdOgMtLcAlRQMWRvT3ty2o2W/Jjnk0ath0mwRHillPmKoeNL12CNLNdUMOWXEEeex2w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\eduar\\source\\repos\\Asteria\\Asteria\\Asteria.csproj",
+  "projectFilePath": "C:\\Users\\eduar\\Documents\\GitHub\\Asteria_2.0\\Asteria\\Asteria.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eduar\\.nuget\\packages\\anglesharp\\0.17.1\\anglesharp.0.17.1.nupkg.sha512",
     "C:\\Users\\eduar\\.nuget\\packages\\anglesharp.css\\0.17.0\\anglesharp.css.0.17.0.nupkg.sha512",

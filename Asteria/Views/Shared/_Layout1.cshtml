@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Asteria</title>
+    <meta name="charset" content="UTF-8">
+    <meta name="author" content="Barbu Eduard(RK13)">
+    <meta name="description" content="The front page of the website. Built with a lot of sweat and tears, this is the very first page i started making. Now rebranded!">
+    <meta name="keywords" content="art,friends,gallery">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Asteria.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <link rel="icon" href="./someimages/asteria-logo-bnw.png">
+</head>
+<body>
+    <header>
+        <div class="nvbr">
+            <img class="logo" src="~/css/someimages/asteria-logo.png" alt="Logo">
+            <nav id="navigation">
+                <div class="container-fluid">
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul>
+                            <li>
+                                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Home" asp-action="Info">What is This Place?</a>
+                            </li>
+                            <li>
+                                <a asp-area="" asp-controller="Posts" asp-action="Index">Search for posts</a>
+                            </li>
+                            @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Posts" asp-action="New">Create a post</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Collections" asp-action="Index">Your collections</a>
+                                </li>
+                            }
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">User List</a>
+                                </li>
+                            }
+                            <li>
+                                <form method="GET" asp-controller="Posts" asp-action="Index">
+                                    <div class="input-group mb-7">
+                                        <input type="text" class="form-control"
+                                               placeholder="Search" name="search"
+                                               value="@ViewBag.SearchString">
+                                        <button class="btn btn-outline-success btn-edit-outline"
+                                                type="submit">
+                                            Search
+                                        </button>
+                                    </div>
+                                </form>
+                            </li>
+                            <li>
+                                <partial name="_LoginPartial" />
+                            </li>
+                        </ul>
+
+                        
+                    </div>
+                </div>
+            </nav>
+            <div id="character"></div>
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer>
+        <div class="socialmedia">
+            <a href="#l1" class="ig"> Instagram </a>
+            <a href="#l1" class="fb"> Facebook </a>
+            <a href="#l1" class="twt"> Twitter </a>
+        </div>
+        <div class="copyright">
+            <p class="tiny"> Copyright 2023-2023 Student, Universitatea Bucuresti, Facultatea de Matematica si Informatica</p>
+            <p class="tiny"> Toate Drepturile Rezervate </p>
+            <p class="tiny"> Termeni si Conditii</p>
+            <p class="tiny"> <a href="./resurse.html"> Resurse</a></p>
+        </div>
+        <div class="container">
+            &copy; 2024 - Asteria - <a asp-area="" asp-controller="Home" asp-action="Resources">Resources</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="~/js/Summernote.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
